@@ -6,81 +6,91 @@
 #include <fstream>
 #include "Constants.h"
 #include "Teacher.h"
-#include "Student.h"
+#include "Solver.h"
 
-class goodStudent : public Student
+class GoodStudent : public Solver
 {
-public:
-	const vector<vector<double>> solveAndSend()
-	{
-		vector<vector<double>> roots;
-		FILE* fin;
-		fin = fopen("tasks.txt", "r");
-		for (int i = 0; i < COUNT; i++)
-			roots.push_back(solveEquation(fin));
-		fclose(fin);
-		return roots;
-	}
 };
 
-class normalStudent : public Student
+class NormalStudent : public Solver
 {
 public:
-	const vector<vector<double>> solveAndSend()
+	void findRoots() override
 	{
 		srand(time(0));
-		vector<vector<double>> roots;
-		FILE* fin;
-		fin = fopen("tasks.txt", "r");
 		for (int i = 0; i < COUNT; i++)
 		{
 			int successPercent = 1 + rand() % 100;
 			if ((successPercent >= 1 && successPercent <= 20) || (successPercent <= 100 && successPercent >= 90))
 			{
-				double buff;
-				for (int j = 0; j < 3; j++)
-				{
-					fscanf(fin, "%lf", &buff);
-				}
 				double a = (double)rand() / (double)RAND_MAX * (SUPREMUM - INFIMUM) + INFIMUM;
 				double b = (double)rand() / (double)RAND_MAX * (SUPREMUM - INFIMUM) + INFIMUM;
 				roots.push_back({ a, b });
 			}
 			else
-				roots.push_back(solveEquation(fin));
+			{
+				vector<double> buff;
+				if (discriminants[i] > 0)
+				{
+					if (discriminants[i] == 0)
+					{
+						buff.push_back(coefs[i][1] * coefs[i][1] / (2 * coefs[i][0]));
+					}
+					else if (coefs[i][0] == 0)
+					{
+						buff.push_back(-coefs[i][2] / coefs[i][1]);
+					}
+					else
+					{
+						buff.push_back((-coefs[i][1] - sqrt(discriminants[i])) / (2 * coefs[i][0]));
+						buff.push_back((-coefs[i][1] + sqrt(discriminants[i])) / (2 * coefs[i][0]));
+					}
+				}
+				else
+					buff = {};
+				roots.push_back(buff);
+			}
 		}
-		fclose(fin);
-		return roots;
 	}
 };
 
-class badStudent
+class BadStudent : public Solver
 {
 public:
-	const vector<vector<double>> solveAndSend()
+	void findRoots() override
 	{
-		vector<vector<double>> roots;
 		for (int i = 0; i < COUNT; i++)
 		{
 			roots.push_back({ 0 });
 		}
-		return roots;
 	}
 };
 
 int main()
 {
-	badStudent Petya;
-	goodStudent Masha;
-	normalStudent Vanya;
+	BadStudent Petya;
+	GoodStudent Masha;
+	NormalStudent Vanya;
 
 	Teacher Jonathan;
 
 	Jonathan.generateTasks();
 
-	Jonathan.check(Petya.solveAndSend(), "Petya");
-	Jonathan.check(Masha.solveAndSend(), "Masha");
-	Jonathan.check(Vanya.solveAndSend(), "Vanya");
+	Masha.readCoefs();
+	Masha.findDiscriminant();
+	Masha.findRoots();
+
+	Vanya.readCoefs();
+	Vanya.findDiscriminant();
+	Vanya.findRoots();
+
+	Petya.readCoefs();
+	Petya.findDiscriminant();
+	Petya.findRoots();
+
+	Jonathan.check(Petya.sendAnswers(), "Petya");
+	Jonathan.check(Masha.sendAnswers(), "Masha");
+	Jonathan.check(Vanya.sendAnswers(), "Vanya");
 
 	Jonathan.printTable();
 
