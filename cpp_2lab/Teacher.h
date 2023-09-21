@@ -5,7 +5,7 @@
 class Teacher
 {
 public:
-	void check(const vector<vector<double>>& answers, const string& name);
+	void check(vector<vector<double>> const& answers, string const& name);
 
 	void printTable();
 
@@ -20,5 +20,5 @@ private:
 	
 	vector<Table> table;
 
-	bool checkRoot(FILE* fin, const vector<double>& roots);
+	bool checkRoot(FILE* fin, vector<double> const& roots);
 };

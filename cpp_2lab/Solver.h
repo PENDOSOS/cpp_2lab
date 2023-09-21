@@ -11,11 +11,15 @@ public:
 
 	vector<double> discriminants;
 
-	const vector<vector<double>> sendAnswers();
+	vector<vector<double>> const sendAnswers();
 
 	void readCoefs();
 
 	void findDiscriminant();
 
-	virtual void findRoots();
+	virtual void findRoots() = 0;
+
+	Solver() {	}
+
+	virtual ~Solver() {	}
 };

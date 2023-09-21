@@ -7,7 +7,7 @@
 
 struct Teacher::Table;
 
-void Teacher::check(const vector<vector<double>>& answers, const string& name)
+void Teacher::check(vector<vector<double>> const& answers, string const& name)
 {
 	Table student;
 	student.name = name;

@@ -10,6 +10,39 @@
 
 class GoodStudent : public Solver
 {
+public:
+
+	void findRoots() override
+	{
+		for (int i = 0; i < COUNT; i++)
+		{
+			vector<double> buff;
+			if (discriminants[i] > 0)
+			{
+				if (discriminants[i] == 0)
+				{
+					buff.push_back(coefs[i][1] * coefs[i][1] / (2 * coefs[i][0]));
+				}
+				else if (coefs[i][0] == 0)
+				{
+					buff.push_back(-coefs[i][2] / coefs[i][1]);
+				}
+				else
+				{
+					buff.push_back((-coefs[i][1] - sqrt(discriminants[i])) / (2 * coefs[i][0]));
+					buff.push_back((-coefs[i][1] + sqrt(discriminants[i])) / (2 * coefs[i][0]));
+				}
+			}
+			else
+				buff = {};
+			roots.push_back(buff);
+		}
+	}
+
+	~GoodStudent() override
+	{
+
+	}
 };
 
 class NormalStudent : public Solver
@@ -52,6 +85,10 @@ public:
 			}
 		}
 	}
+
+	NormalStudent() {	}
+
+	~NormalStudent() override {	}
 };
 
 class BadStudent : public Solver
@@ -64,35 +101,43 @@ public:
 			roots.push_back({ 0 });
 		}
 	}
+
+	BadStudent() {	}
+
+	~BadStudent() override {	}
 };
 
 int main()
 {
-	BadStudent Petya;
-	GoodStudent Masha;
-	NormalStudent Vanya;
+	Solver* Petya = new BadStudent;
+	Solver* Masha = new GoodStudent;
+	Solver* Vanya = new NormalStudent;
 
-	Teacher Jonathan;
+	Teacher* Jonathan = new Teacher;
 
-	Jonathan.generateTasks();
+	Jonathan->generateTasks();
 
-	Masha.readCoefs();
-	Masha.findDiscriminant();
-	Masha.findRoots();
+	Masha->readCoefs();
+	Masha->findDiscriminant();
+	Masha->findRoots();
 
-	Vanya.readCoefs();
-	Vanya.findDiscriminant();
-	Vanya.findRoots();
+	Vanya->readCoefs();
+	Vanya->findDiscriminant();
+	Vanya->findRoots();
 
-	Petya.readCoefs();
-	Petya.findDiscriminant();
-	Petya.findRoots();
+	Petya->readCoefs();
+	Petya->findDiscriminant();
+	Petya->findRoots();
 
-	Jonathan.check(Petya.sendAnswers(), "Petya");
-	Jonathan.check(Masha.sendAnswers(), "Masha");
-	Jonathan.check(Vanya.sendAnswers(), "Vanya");
+	Jonathan->check(Petya->sendAnswers(), "Petya");
+	Jonathan->check(Masha->sendAnswers(), "Masha");
+	Jonathan->check(Vanya->sendAnswers(), "Vanya");
 
-	Jonathan.printTable();
+	Jonathan->printTable();
+
+	delete Petya;
+	delete Vanya;
+	delete Masha;
 
 	return 0;
 }
