@@ -131,7 +131,7 @@ int main()
 
 	Jonathan->check(Petya->sendAnswers(), "Petya");
 	Jonathan->check(Masha->sendAnswers(), "Masha");
-	Jonathan->check(Oleg->sendAnswers(), "Vanya");
+	Jonathan->check(Oleg->sendAnswers(), "Oleg");
 
 	Jonathan->printTable();
 
