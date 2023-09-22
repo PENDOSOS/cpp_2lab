@@ -111,7 +111,7 @@ int main()
 {
 	Solver* Petya = new BadStudent;
 	Solver* Masha = new GoodStudent;
-	Solver* Vanya = new NormalStudent;
+	Solver* Oleg = new NormalStudent;
 
 	Teacher* Jonathan = new Teacher;
 
@@ -121,9 +121,9 @@ int main()
 	Masha->findDiscriminant();
 	Masha->findRoots();
 
-	Vanya->readCoefs();
-	Vanya->findDiscriminant();
-	Vanya->findRoots();
+	Oleg->readCoefs();
+	Oleg->findDiscriminant();
+	Oleg->findRoots();
 
 	Petya->readCoefs();
 	Petya->findDiscriminant();
@@ -131,13 +131,14 @@ int main()
 
 	Jonathan->check(Petya->sendAnswers(), "Petya");
 	Jonathan->check(Masha->sendAnswers(), "Masha");
-	Jonathan->check(Vanya->sendAnswers(), "Vanya");
+	Jonathan->check(Oleg->sendAnswers(), "Vanya");
 
 	Jonathan->printTable();
 
 	delete Petya;
-	delete Vanya;
+	delete Oleg;
 	delete Masha;
+	delete Jonathan;
 
 	return 0;
 }
